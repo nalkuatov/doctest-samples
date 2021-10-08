@@ -5,6 +5,8 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+    - aeson
 
 tests:
   doctests:
