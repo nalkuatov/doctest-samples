@@ -2,6 +2,9 @@ module Sample where
 
 import Data.Aeson
 
+-- $setup
+-- >>> :m Data.Aeson Sample
+
 -- |
 -- >>> acc 5
 -- 6

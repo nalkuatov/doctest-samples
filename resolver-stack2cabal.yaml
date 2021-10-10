@@ -1,0 +1,6 @@
+name: stack2cabal-resolver
+
+resolver: lts-18.10
+packages:
+  - hpack-0.34.4
+  - stack2cabal-1.0.12

@@ -2,3 +2,4 @@
 *~
 doctest-samples.cabal
 stack.yaml.lock
+dist-newstyle/*
