@@ -20,6 +20,17 @@ library
     , base >=4.7 && <5
   default-language: Haskell2010
 
+test-suite docspecs
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_doctest_samples
+  hs-source-dirs:
+      docspecs
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
 test-suite doctests
   type: exitcode-stdio-1.0
   main-is: Main.hs

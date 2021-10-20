@@ -10,6 +10,10 @@ library:
   x-docspec-extra-packages: aeson
 
 tests:
+  docspecs:
+    source-dirs: docspecs
+    main: Main.hs
+
   doctests:
     source-dirs: doctests
     main: Main.hs
