@@ -5,10 +5,15 @@
 , pkgs ? import nixpkgsSrc nixpkgsArgs
 }: rec {
 
-  hs-pkgs = with pkgs.haskell-nix; stackProject {
-    src = haskellLib.cleanGit {
-      src = ./.;
-    };
+  pkgsStatic = pkgs.pkgsCross.musl64;
+
+  src = pkgsStatic.haskell-nix.haskellLib.cleanGit {
+    name = "doctest-samples";
+    src = ./.;
+  };
+
+  hs-pkgs = with pkgsStatic.haskell-nix; stackProject {
+    src = src;
     modules = [{
       doHaddock = false;
     }];
@@ -19,23 +24,28 @@
     src = builtins.fetchurl {
       url = "https://github.com/phadej/cabal-extras/releases/download/cabal-docspec-0.0.0.20210111/cabal-docspec-0.0.0.20210111.xz";
     };
-    phases = [ "installPhase" ];
+    phases = [ "installPhase" "fixupPhase" ];
     installPhase = ''
       mkdir -p $out/bin
-      xz -d < ${src} > $out/bin/cabal-docspec
-      chmod +x $out/bin/cabal-docspec
+      xz -d < ${src} > cabal-docspec
+      install -m755 -D cabal-docspec $out/bin/cabal-docspec
     '';
+    nativeBuildInputs = [
+      pkgs.autoPatchelfHook
+    ];
+    buildInputs = [
+      pkgs.gmp
+    ];
   };
 
-  run-doctests =
+  run-doctests = { target ? "doctest-samples" }:
     let
       env = hs-pkgs.shellFor {
-        withHaddock = false;
-        additional = _: [ hs-pkgs.doctest-samples.components.library ];
+        withHoogle = false;
+        additional = _: [ hs-pkgs."${target}".components.library ];
       };
-    in
-    pkgs.writeShellScript "run-doctests" ''
-        export PATH="${pkgs.lib.makeBinPath [ env.ghc cabal-docspec ] }"
-        cabal-docspec --no-cabal-plan doctest-samples.cabal
+    in with pkgs; writeShellScript "run-doctests" ''
+      export PATH=${lib.makeBinPath [ cabal-docspec env.ghc ] }
+      cabal-docspec -w ${env.ghc.targetPrefix}ghc --no-cabal-plan ${src}/${target}.cabal
     '';
 }
