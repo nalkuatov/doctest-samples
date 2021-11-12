@@ -19,6 +19,21 @@
     }];
   };
 
+  cabal-docspec-rev = with pkgs.haskell-nix; cabalProject {
+    name = "cabal-docspec-rev";
+    compiler-nix-name = "ghc884";
+    src = haskellLib.cleanGit {
+      subDir = "cabal-docspec";
+      src = pkgs.fetchFromGitHub {
+        owner = "phadej";
+        repo = "cabal-extras";
+        rev = "";
+        subDir = "";
+        sha256 = "";
+      };
+    };
+  };
+
   cabal-docspec = pkgs.stdenv.mkDerivation rec {
     name = "cabal-docspec";
     src = builtins.fetchurl {
