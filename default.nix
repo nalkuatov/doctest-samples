@@ -22,34 +22,26 @@
   cabal-docspec-rev = with pkgs.haskell-nix; cabalProject {
     name = "cabal-docspec-rev";
     compiler-nix-name = "ghc884";
-    src = haskellLib.cleanSourceWith {
-      subDir = "cabal-docspec";
-      src = pkgs.fetchFromGitHub {
+    src =   pkgs.fetchFromGitHub {
         owner = "phadej";
         repo = "cabal-extras";
         rev = "7a6e5846638102fc8202586b011a5b43d3061c26";
         sha256 = "1z8ca4ih8lyzadlgr8ppki78qgw0f636zy1fwd61m7gafc5jcycf";
       };
-    };
   };
 
   cabal-docspec = pkgs.stdenv.mkDerivation rec {
     name = "cabal-docspec";
     src = builtins.fetchurl {
-      url = "https://github.com/phadej/cabal-extras/releases/download/cabal-docspec-0.0.0.20210111/cabal-docspec-0.0.0.20210111.xz";
+      url = "https://github.com/phadej/cabal-extras/releases/download/cabal-docspec-0.0.0.20211114/cabal-docspec-0.0.0.20211114.xz";
     };
-    phases = [ "installPhase" "fixupPhase" ];
+    phases = [ "installPhase" ];
     installPhase = ''
       mkdir -p $out/bin
       xz -d < ${src} > cabal-docspec
-      install -m755 -D cabal-docspec $out/bin/cabal-docspec
+      cp cabal-docspec $out/bin/cabal-docspec
+      chmod a+x $out/bin/cabal-docspec
     '';
-    nativeBuildInputs = [
-      pkgs.autoPatchelfHook
-    ];
-    buildInputs = [
-      pkgs.gmp
-    ];
   };
 
   run-doctests = { target ? "doctest-samples" }:
@@ -59,7 +51,10 @@
         additional = _: [ hs-pkgs."${target}".components.library ];
       };
     in with pkgs; writeShellScript "run-doctests" ''
-      export PATH=${lib.makeBinPath [ cabal-docspec env.ghc ] }
-      cabal-docspec -w ${env.ghc.targetPrefix}ghc --no-cabal-plan ${src}/${target}.cabal
+      export PATH=${lib.makeBinPath [ cabal-docspec env.ghc pkgs.gawk ]}
+      DEFAULT_EXTENSIONS=$(
+        awk '/^$/ {def = 0}; { if (def) { gsub(/^ *- */, "-X", $0); print $0; } }; /default-extensions/ {def = 1};' ${src}/package.yaml
+      )
+      cabal-docspec $DEFAULT_EXTENSIONS -w ${env.ghc.targetPrefix}ghc --no-cabal-plan ${src}/${target}.cabal
     '';
 }

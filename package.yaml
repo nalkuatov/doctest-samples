@@ -5,8 +5,14 @@ dependencies:
 
 library:
   source-dirs: src
+
+  default-extensions:
+    - OverloadedStrings
+    - DataKinds
+
   dependencies:
     - aeson
+
   x-docspec-extra-packages: aeson
 
 tests:
