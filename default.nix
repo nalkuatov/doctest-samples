@@ -52,9 +52,16 @@
       };
     in with pkgs; writeShellScript "run-doctests" ''
       export PATH=${lib.makeBinPath [ cabal-docspec env.ghc pkgs.gawk ]}
+
+      # extract default language extensions from 'package.yaml'
+      # to run 'cabal-docspec' with
       DEFAULT_EXTENSIONS=$(
-        awk '/^$/ {def = 0}; { if (def) { gsub(/^ *- */, "-X", $0); print $0; } }; /default-extensions/ {def = 1};' ${src}/package.yaml
+        awk '/^$/ {def = 0}; { if (def) { gsub(/^ *- */, "-X", $0); print $0; } };
+          /default-extensions/ {def = 1};' \
+          ${src}/package.yaml
       )
+
       cabal-docspec $DEFAULT_EXTENSIONS -w ${env.ghc.targetPrefix}ghc --no-cabal-plan ${src}/${target}.cabal
+
     '';
 }
