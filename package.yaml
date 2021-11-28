@@ -13,7 +13,10 @@ library:
   dependencies:
     - aeson
 
-  x-docspec-extra-packages: aeson
+  verbatim:
+    x-docspec-options: |
+     -XOverloadedStrings
+     -XDataKinds
 
 tests:
   docspecs:
