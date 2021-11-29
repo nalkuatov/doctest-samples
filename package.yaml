@@ -1,22 +1,16 @@
+
+<<: !include "definitions.yaml"
+
 name:                doctest-samples
 
 dependencies:
 - base >= 4.7 && < 5
 
 library:
-  source-dirs: src
-
-  default-extensions:
-    - OverloadedStrings
-    - DataKinds
+  <<: *lib-common
 
   dependencies:
     - aeson
-
-  verbatim:
-    x-docspec-options: |
-     -XOverloadedStrings
-     -XDataKinds
 
 tests:
   docspecs:

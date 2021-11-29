@@ -16,11 +16,17 @@ library
   hs-source-dirs:
       src
   default-extensions:
-      OverloadedStrings
+      AllowAmbiguousTypes
+      ApplicativeDo
+      LambdaCase
   build-depends:
       aeson
     , base >=4.7 && <5
   default-language: Haskell2010
+  x-docspec-options:
+      -XAllowAmbiguousTypes
+      -XApplicativeDo
+      -XLambdaCase
 
 test-suite docspecs
   type: exitcode-stdio-1.0
@@ -29,6 +35,10 @@ test-suite docspecs
       Paths_doctest_samples
   hs-source-dirs:
       docspecs
+  default-extensions:
+      AllowAmbiguousTypes
+      ApplicativeDo
+      LambdaCase
   build-depends:
       base >=4.7 && <5
   default-language: Haskell2010
@@ -40,6 +50,10 @@ test-suite doctests
       Paths_doctest_samples
   hs-source-dirs:
       doctests
+  default-extensions:
+      AllowAmbiguousTypes
+      ApplicativeDo
+      LambdaCase
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5

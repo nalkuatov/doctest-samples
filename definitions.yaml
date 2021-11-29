@@ -1,0 +1,20 @@
+_definitions:
+  _top-level:
+
+    - &default-extensions
+        - AllowAmbiguousTypes
+        - ApplicativeDo
+        - LambdaCase
+
+    - &doctest-extensions |
+        -XAllowAmbiguousTypes
+        -XApplicativeDo
+        -XLambdaCase
+
+  _utils:
+    - &lib-common
+        source-dirs: src
+        verbatim:
+          x-docspec-options: *doctest-extensions
+
+default-extensions: *default-extensions
