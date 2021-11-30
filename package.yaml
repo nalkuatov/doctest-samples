@@ -1,5 +1,16 @@
+_definitions:
 
-<<: !include "definitions.yaml"
+  _top-level:
+    - &doctest-extensions |
+        -XAllowAmbiguousTypes
+        -XApplicativeDo
+        -XLambdaCase
+
+  _utils:
+    - &lib-common
+        source-dirs: src
+        verbatim:
+          x-docspec-options: *doctest-extensions
 
 name:                doctest-samples
 
