@@ -48,13 +48,12 @@
     let
       env = hs-pkgs.shellFor {
         withHoogle = false;
-        additional = _: [
-          hs-pkgs."${target}".components.library
-        ];
+        additional = _: [ hs-pkgs."${target}".components.library pkgs.haskellPackages.universum ];
       };
     in with pkgs; writeShellScript "run-doctests" ''
       export PATH=${lib.makeBinPath [ cabal-docspec env.ghc ]}
-      ${env.ghc.targetPrefix}runghc ${src}/run-doctests.hs -w ${env.ghc.targetPrefix}ghc \
-        --no-cabal-plan ${src}/${target}.cabal
+      ${env.ghc.targetPrefix}runghc \
+        ${src}/run-doctests.hs --ci ${target} -- -w ${env.ghc.targetPrefix}ghc
     '';
+
 }

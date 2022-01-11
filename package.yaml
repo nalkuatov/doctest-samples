@@ -24,9 +24,6 @@ library:
     - aeson
 
 tests:
-  docspecs:
-    source-dirs: docspecs
-    main: Main.hs
 
   doctests:
     source-dirs: doctests
