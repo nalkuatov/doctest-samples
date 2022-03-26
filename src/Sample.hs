@@ -6,6 +6,10 @@ import Data.Aeson
 -- >>> :m Data.Aeson Sample
 
 -- |
+-- >>> putStrLn ""
+-- <BLANKLINE>
+
+-- |
 -- >>> acc 5
 -- 6
 --
