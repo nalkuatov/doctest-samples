@@ -19,17 +19,6 @@
     }];
   };
 
-  cabal-docspec-rev = with pkgs.haskell-nix; cabalProject {
-    name = "cabal-docspec-rev";
-    compiler-nix-name = "ghc884";
-    src =   pkgs.fetchFromGitHub {
-        owner = "phadej";
-        repo = "cabal-extras";
-        rev = "7a6e5846638102fc8202586b011a5b43d3061c26";
-        sha256 = "1z8ca4ih8lyzadlgr8ppki78qgw0f636zy1fwd61m7gafc5jcycf";
-      };
-  };
-
   cabal-docspec = pkgs.stdenv.mkDerivation rec {
     name = "cabal-docspec";
     src = builtins.fetchurl {
@@ -48,12 +37,12 @@
     let
       env = hs-pkgs.shellFor {
         withHoogle = false;
-        additional = _: [ hs-pkgs."${target}".components.library pkgs.haskellPackages.universum ];
+        additional = _: [ hs-pkgs."${target}".components.library ];
       };
     in with pkgs; writeShellScript "run-doctests" ''
       export PATH=${lib.makeBinPath [ cabal-docspec env.ghc ]}
-      ${env.ghc.targetPrefix}runghc \
-        ${src}/run-doctests.hs --ci ${target} -- -w ${env.ghc.targetPrefix}ghc
+      cabal-docspec -w ${env.ghc.targetPrefix}ghc \
+        --no-cabal-plan ${src}/${target}.cabal
     '';
 
 }
